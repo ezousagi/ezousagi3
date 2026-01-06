@@ -23,7 +23,6 @@
             min-height: 100vh;
         }
     </style>
-    <!-- インポートマップの修正: 存在しないバージョン(19.2.3)や重複した末尾スラッシュ付き指定を削除 -->
     <script type="importmap">
 {
   "imports": {
@@ -33,8 +32,8 @@
     "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react",
     "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
     "canvas-confetti": "https://esm.sh/canvas-confetti@1.9.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
@@ -44,15 +43,25 @@
         <div class="flex items-center justify-center min-h-screen bg-[#fdf6f0]">
             <div class="text-center">
                 <div class="animate-bounce mb-4 text-4xl">🧧</div>
-                <p class="text-[#8b4513] font-medium tracking-widest">おみくじを準備中...</p>
+                <p id="loading-text" class="text-[#8b4513] font-medium tracking-widest">おみくじを準備中...</p>
+                <div id="error-console" class="hidden mt-4 p-4 bg-red-50 text-red-600 text-xs rounded border border-red-200 text-left max-w-xs mx-auto overflow-auto max-h-32"></div>
             </div>
         </div>
     </div>
 
-    <!-- 
-      type="text/tsx" としてソースを指定し、esm.sh/run がこれをトランスパイルするようにします。
-      GitHub Pagesのサブディレクトリに対応するため相対パス ./ を使用。
-    -->
+    <script>
+        // ブラウザ上でエラーが発生した際に表示するための簡易デバッグ
+        window.onerror = function(msg, url, line) {
+            const consoleEl = document.getElementById('error-console');
+            if (consoleEl) {
+                consoleEl.classList.remove('hidden');
+                consoleEl.innerText += `Error: ${msg} at ${line}\n`;
+            }
+            const loadingText = document.getElementById('loading-text');
+            if (loadingText) loadingText.innerText = "読み込みに失敗しました。";
+        };
+    </script>
+
     <script type="text/tsx" src="./index.tsx"></script>
     <script type="module" src="https://esm.sh/run"></script>
 </body>
