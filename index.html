@@ -23,7 +23,7 @@
             min-height: 100vh;
         }
     </style>
-    <!-- インポートマップの修正: バージョンを安定版に固定し、不必要な重複を削除 -->
+    <!-- インポートマップの修正: 存在しないバージョン(19.2.3)や重複した末尾スラッシュ付き指定を削除 -->
     <script type="importmap">
 {
   "imports": {
@@ -50,8 +50,8 @@
     </div>
 
     <!-- 
-      GitHub Pages等の静的配信環境では、ブラウザが直接 .tsx を解釈できないため
-      esm.sh/run を使用してブラウザ上でトランスパイルを行います。
+      type="text/tsx" としてソースを指定し、esm.sh/run がこれをトランスパイルするようにします。
+      GitHub Pagesのサブディレクトリに対応するため相対パス ./ を使用。
     -->
     <script type="text/tsx" src="./index.tsx"></script>
     <script type="module" src="https://esm.sh/run"></script>
