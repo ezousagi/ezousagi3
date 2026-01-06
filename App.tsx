@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Share2, RefreshCcw, Heart, Download, Music, Music2 } from 'lucide-react';
+import { Sparkles, Share2, RefreshCcw, Heart, Music, Music2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { Layout } from './components/Layout.tsx';
@@ -12,31 +12,33 @@ import { ChoiceId, FortuneResult } from './types.ts';
 type Step = 'splash' | 'question' | 'loading' | 'result';
 
 const App: React.FC = () => {
+  console.log("App component rendering...");
   const [step, setStep] = useState<Step>('splash');
   const [selectedChoice, setSelectedChoice] = useState<ChoiceId | null>(null);
   const [result, setResult] = useState<FortuneResult | null>(null);
   const [isAudioOn, setIsAudioOn] = useState(false);
 
-  // Initial confetti and splash skip
   useEffect(() => {
     if (step === 'splash') {
-      const timer = setTimeout(() => setStep('question'), 3000);
+      const timer = setTimeout(() => {
+        console.log("Transitioning to question step");
+        setStep('question');
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [step]);
 
   const handleChoice = (id: ChoiceId) => {
+    console.log("Choice selected:", id);
     setSelectedChoice(id);
     setStep('loading');
     
-    // Simulate selection logic
     setTimeout(() => {
       const candidates = OMIKUJI_DATA[id];
       const selected = candidates[Math.floor(Math.random() * candidates.length)];
       setResult(selected);
       setStep('result');
       
-      // Celebrate result
       confetti({
         particleCount: 150,
         spread: 70,
@@ -53,14 +55,16 @@ const App: React.FC = () => {
   };
 
   const share = () => {
+    const text = `私の今年のおみくじは【${result?.fortune}】でした！ #年末おみくじ #おつかれさま2024`;
     if (navigator.share) {
       navigator.share({
         title: '年末おみくじ',
-        text: `私の今年のおみくじは【${result?.fortune}】でした！ #年末おみくじ #おつかれさま2024`,
+        text: text,
         url: window.location.href,
       }).catch(console.error);
     } else {
-      alert('クリップボードにコピーしました！');
+      navigator.clipboard.writeText(text + " " + window.location.href);
+      alert('結果をクリップボードにコピーしました！');
     }
   };
 
@@ -133,8 +137,7 @@ const App: React.FC = () => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                 className="w-48 h-48 border-4 border-dashed border-[#8b4513]/20 rounded-full flex items-center justify-center"
-              >
-              </motion.div>
+              />
               <motion.div
                 animate={{ 
                   scale: [1, 1.1, 1],
@@ -164,15 +167,12 @@ const App: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="flex-1 flex flex-col space-y-6 py-4"
           >
-            {/* Fortune Card */}
             <div className="bg-white border-[10px] border-[#8b4513]/5 rounded-sm p-6 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-[#8b4513]"></div>
-              
               <div className="flex flex-col items-center space-y-6">
                 <div className="text-xs tracking-[0.5em] text-[#8b4513]/40 font-bold uppercase border-b border-[#8b4513]/10 pb-1">
                   2024 年末おみくじ
                 </div>
-                
                 <motion.div 
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -181,7 +181,6 @@ const App: React.FC = () => {
                 >
                   {result.fortune}
                 </motion.div>
-
                 <div className="space-y-4 w-full text-center">
                   <p className="text-lg leading-relaxed font-medium">
                     {result.message}
@@ -191,7 +190,6 @@ const App: React.FC = () => {
                     <p className="text-sm text-[#5d4037]">{result.advice}</p>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 w-full pt-4 border-t border-[#8b4513]/10">
                   <div className="text-center">
                     <p className="text-[10px] text-[#8b4513]/60 mb-1">ラッキーカラー</p>
@@ -203,14 +201,10 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Decorative Corner */}
               <div className="absolute bottom-0 right-0 w-12 h-12 flex items-center justify-center opacity-10 grayscale">
                  <Sparkles size={40} />
               </div>
             </div>
-
-            {/* Actions */}
             <div className="flex flex-col gap-3 pt-4">
               <Button onClick={share}>
                 <Share2 size={18} /> 結果を共有する
@@ -219,7 +213,6 @@ const App: React.FC = () => {
                 <RefreshCcw size={18} /> もう一度引く
               </Button>
             </div>
-            
             <div className="flex items-center justify-center gap-2 text-[#8b4513]/40 py-4">
               <Heart size={14} className="fill-current" />
               <span className="text-[10px] tracking-widest">良いお年をお迎えください</span>
@@ -228,7 +221,6 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating BGM Toggle (Placeholder) */}
       <motion.button
         onClick={() => setIsAudioOn(!isAudioOn)}
         className="fixed bottom-20 right-6 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-[#8b4513]/60"

@@ -23,6 +23,7 @@
             min-height: 100vh;
         }
     </style>
+    <!-- インポートマップの修正: バージョンを安定版に固定し、不必要な重複を削除 -->
     <script type="importmap">
 {
   "imports": {
@@ -47,6 +48,12 @@
             </div>
         </div>
     </div>
-    <script type="module" src="./index.tsx"></script>
+
+    <!-- 
+      GitHub Pages等の静的配信環境では、ブラウザが直接 .tsx を解釈できないため
+      esm.sh/run を使用してブラウザ上でトランスパイルを行います。
+    -->
+    <script type="text/tsx" src="./index.tsx"></script>
+    <script type="module" src="https://esm.sh/run"></script>
 </body>
 </html>
