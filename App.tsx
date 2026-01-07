@@ -12,7 +12,6 @@ import { ChoiceId, FortuneResult } from './types.ts';
 type Step = 'splash' | 'question' | 'loading' | 'result';
 
 const App: React.FC = () => {
-  console.log("App component rendering...");
   const [step, setStep] = useState<Step>('splash');
   const [selectedChoice, setSelectedChoice] = useState<ChoiceId | null>(null);
   const [result, setResult] = useState<FortuneResult | null>(null);
@@ -21,7 +20,6 @@ const App: React.FC = () => {
   useEffect(() => {
     if (step === 'splash') {
       const timer = setTimeout(() => {
-        console.log("Transitioning to question step");
         setStep('question');
       }, 3000);
       return () => clearTimeout(timer);
@@ -29,7 +27,6 @@ const App: React.FC = () => {
   }, [step]);
 
   const handleChoice = (id: ChoiceId) => {
-    console.log("Choice selected:", id);
     setSelectedChoice(id);
     setStep('loading');
     

@@ -32,8 +32,8 @@
     "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react",
     "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
     "canvas-confetti": "https://esm.sh/canvas-confetti@1.9.3",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
@@ -44,21 +44,21 @@
             <div class="text-center">
                 <div class="animate-bounce mb-4 text-4xl">🧧</div>
                 <p id="loading-text" class="text-[#8b4513] font-medium tracking-widest">おみくじを準備中...</p>
-                <div id="error-console" class="hidden mt-4 p-4 bg-red-50 text-red-600 text-xs rounded border border-red-200 text-left max-w-xs mx-auto overflow-auto max-h-32"></div>
+                <div id="error-console" class="hidden mt-4 p-4 bg-red-50 text-red-600 text-xs rounded border border-red-200 text-left max-w-xs mx-auto overflow-auto max-h-48"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ブラウザ上でエラーが発生した際に表示するための簡易デバッグ
-        window.onerror = function(msg, url, line) {
+        // エラーを画面上で確認できるようにする
+        window.onerror = function(msg, url, line, col, error) {
             const consoleEl = document.getElementById('error-console');
             if (consoleEl) {
                 consoleEl.classList.remove('hidden');
-                consoleEl.innerText += `Error: ${msg} at ${line}\n`;
+                consoleEl.innerText += `Error: ${msg}\nLine: ${line}\nSource: ${url.split('/').pop()}\n\n`;
             }
             const loadingText = document.getElementById('loading-text');
-            if (loadingText) loadingText.innerText = "読み込みに失敗しました。";
+            if (loadingText) loadingText.innerText = "エラーが発生しました";
         };
     </script>
 
